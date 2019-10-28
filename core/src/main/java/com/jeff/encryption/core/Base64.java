@@ -5,7 +5,7 @@ package com.jeff.encryption.core;
  * @describe
  * @date 2019/10/23.
  */
-public class Base64 {
+public final class Base64 {
     static private final int BASELENGTH = 128;
     static private final int LOOKUPLENGTH = 64;
     static private final int TWENTYFOURBITGROUP = 24;

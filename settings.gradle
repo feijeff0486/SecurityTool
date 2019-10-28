@@ -1,1 +1,1 @@
-include ':app', ':tool', ':core'
+include ':app', ':tool', ':core', ':encryptlibrary'

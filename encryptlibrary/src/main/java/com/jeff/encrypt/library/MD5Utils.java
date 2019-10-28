@@ -1,4 +1,4 @@
-package com.jeff.securitytool.demo;
+package com.jeff.encrypt.library;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;

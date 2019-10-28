@@ -17,7 +17,7 @@ import javax.crypto.spec.SecretKeySpec;
  * @date 2019/10/23.
  */
 public final class AES {
-    private static final String AES = "AES";
+    public static final String AES = "AES";
     private static final String ALGORITHM = "SHA1PRNG";
 
     /**

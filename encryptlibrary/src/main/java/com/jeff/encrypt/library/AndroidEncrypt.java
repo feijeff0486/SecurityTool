@@ -1,12 +1,13 @@
-package com.jeff.securitytool.demo;
+package com.jeff.encrypt.library;
 
 import android.content.Context;
 import android.content.res.AssetManager;
 
+import com.jeff.encryption.core.AES;
+import com.jeff.encryption.core.FileIOUtils;
 import com.jeff.encryption.core.RSA;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.File;
 import java.io.InputStream;
 import java.security.PublicKey;
 
@@ -17,10 +18,10 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * @author Jeff
  * @describe
- * @date 2019/10/23.
+ * @date 2019/10/28.
  */
-public final class DecryptUtils {
-    private static final String SIMPLE_KEY_DATA = "testkey.dat";
+public class AndroidEncrypt extends Encrypt{
+    public static final String ENCRYPT_FILE = "encrypt.dat";
 
     /**
      * 获取解密之后的文件流
@@ -29,12 +30,13 @@ public final class DecryptUtils {
         try {
             AssetManager assetmanager = context.getAssets();
             InputStream is = assetmanager.open("encrypt_测试.txt");
-            byte[] rawkey = getRawKey(context);
+
+            byte[] rawKey = getRawKey(context);
 
             //使用解密流，数据写出到基础OutputStream之前先对该会先对数据进行解密
-            SecretKeySpec skeySpec = new SecretKeySpec(rawkey, "AES");
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+            SecretKeySpec keySpec = new SecretKeySpec(rawKey, AES.AES);
+            Cipher cipher = Cipher.getInstance(AES.AES);
+            cipher.init(Cipher.DECRYPT_MODE, keySpec);
             return new CipherInputStream(is, cipher);
         } catch (Exception e) {
             e.printStackTrace();
@@ -42,28 +44,24 @@ public final class DecryptUtils {
         return null;
     }
 
+    public static void encrypt(Context context, File fromFile, File toFile) throws Exception {
+        encrypt(getRawKey(context), fromFile, toFile);
+    }
+
+    public static void decrypt(Context context, File fromFile, File toFile) throws Exception {
+        decrypt(getRawKey(context), fromFile, toFile);
+    }
+
     /**
      * 获取解密之后的文件加密密钥
      */
-    private static byte[] getRawKey(Context context) throws Exception {
+    public static byte[] getRawKey(Context context) throws Exception {
         //获取应用的签名密钥
         byte[] sign = SignUtils.getSign(context);
         PublicKey pubKey = SignUtils.getPublicKey(sign);
         //获取加密文件的密钥
-        InputStream keyis = context.getAssets().open(SIMPLE_KEY_DATA);
-        byte[] key = getData(keyis);
+        byte[] key = FileIOUtils.readIn(context.getAssets().open(ENCRYPT_FILE));
         //解密密钥
         return RSA.decrypt(key, pubKey);
-    }
-
-
-    private static byte[] getData(InputStream is) throws IOException {
-        byte[] buffer = new byte[1024];
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        int offset;
-        while ((offset = is.read(buffer)) != -1) {
-            baos.write(buffer, 0, offset);
-        }
-        return baos.toByteArray();
     }
 }

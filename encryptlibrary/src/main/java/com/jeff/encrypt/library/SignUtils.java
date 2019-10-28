@@ -1,4 +1,4 @@
-package com.jeff.securitytool.demo;
+package com.jeff.encrypt.library;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
