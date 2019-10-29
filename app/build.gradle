@@ -12,17 +12,22 @@ android {
     }
 
     signingConfigs {
+        //加载资源
+        Properties properties = new Properties()
+        InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
+        properties.load(inputStream)
+
         debug {
-            storeFile file('/Users/zhangfei/Dev/Sign/security.keystore')
-            storePassword "hiveviewdomybox"
-            keyAlias "domy_security"
-            keyPassword "hiveviewdomybox"
+            storeFile file(properties.getProperty("KEYSTORE_NAME"))
+            storePassword properties.getProperty("KEYSTORE_PASSWORD")
+            keyAlias properties.getProperty("KEYSTORE_ALIAS")
+            keyPassword properties.getProperty("KEYSTORE_ALIAS_PASSWORD")
         }
-        release  {
-            storeFile file('/Users/zhangfei/Dev/Sign/security.keystore')
-            storePassword "hiveviewdomybox"
-            keyAlias "domy_security"
-            keyPassword "hiveviewdomybox"
+        release {
+            storeFile file(properties.getProperty("KEYSTORE_NAME"))
+            storePassword properties.getProperty("KEYSTORE_PASSWORD")
+            keyAlias properties.getProperty("KEYSTORE_ALIAS")
+            keyPassword properties.getProperty("KEYSTORE_ALIAS_PASSWORD")
         }
     }
 
